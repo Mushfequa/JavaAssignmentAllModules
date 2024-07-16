@@ -1,0 +1,159 @@
+Q i. Select unique job from EMP table.
+A.SELECT DISTINCT job FROM Emp;
+
+Q ii. List the details of the emps in asc order of the Dptnos and desc of Jobs?
+A. SELECT *
+     FROM employees
+     ORDER BY Dptnos ASC, Jobs DESC;
+
+Q iii. Display all the unique job groups in the descending order?
+ A. SELECT DISTINCT Job
+     FROM employees
+     ORDER BY Job DESC;
+
+ Q.iv. List the emps who joined before 1981.
+A. SELECT *
+     FROM employees
+     WHERE HireDate < '1981-01-01';
+
+Q.v. List the Empno, Ename, Sal, Daily sal of all emps in the asc order of Annsal.
+A.SELECT 
+    Empno, 
+    Ename, 
+    Sal, 
+    (Sal / 30) AS Daily_Sal
+    FROM employees
+    ORDER BY (Sal * 12) ASC;
+
+Q.vi. List the Empno, Ename, Sal, Exp of all emps working for Mgr 7369.
+A.SELECT 
+    Empno, 
+    Ename, 
+    Sal, 
+    YEAR(CURDATE()) - YEAR(HireDate) AS Exp
+    FROM employees
+    WHERE Mgr = 7369;
+
+Q vii. Display all the details of the emps who’s Comm. Is more than their Sal?
+A.SELECT *
+    FROM employees
+    WHERE Comm > Sal;
+
+Q.viii. List the emps who are either ‘CLERK’ or ‘ANALYST’ in the Desc order.
+A.SELECT *
+   FROM employees
+   WHERE Job IN ('CLERK', 'ANALYST')
+   ORDER BY Job DESC;
+
+Q.ix. List the emps Who Annual sal ranging from 22000 and 45000. 
+A.SELECT *
+    FROM employees
+    WHERE (Sal * 12) BETWEEN 22000 AND 45000;
+
+Q.x. List the Enames those are starting with ‘S’ and with five characters.
+A.SELECT Ename
+    FROM employees
+    WHERE Ename LIKE 'S____';
+
+Q.xi. List the emps whose Empno not starting with digit78.
+A.SELECT *
+   FROM employees
+   WHERE Empno NOT LIKE '78%';
+
+Q.xii. List all the Clerks of Deptno 20.
+A.SELECT *
+    FROM employees
+   WHERE Job = 'CLERK' AND Deptno = 20;
+
+ Q.xiii. List the Emps who are senior to their own MGRS.
+A.SELECT e.*
+    FROM employees e
+    INNER JOIN employees m ON e.Mgr = m.Empno
+    WHERE e.HireDate < m.HireDate;
+
+Q.xiv. List the Emps of Deptno 20 who’s Jobs are same as Deptno10.
+A.SELECT *
+   FROM employees
+   WHERE Deptno = 20
+  AND Job IN (SELECT DISTINCT Job FROM employees WHERE Deptno = 10);
+
+Q.xv. List the Emps who’s Sal is same as FORD or SMITH in desc order of Sal.
+A.SELECT *
+    FROM employees
+    WHERE Sal IN (
+    SELECT Sal
+    FROM employees
+    WHERE Ename IN ('FORD', 'SMITH')
+)
+    ORDER BY Sal DESC;
+
+Q.xvi. List the emps whose jobs same as SMITH or ALLEN.
+A.SELECT *
+    FROM employees
+    WHERE Job IN ('SMITH', 'ALLEN');
+
+Q.xvii. Any jobs of deptno 10 those that are not found in deptno 20.
+A.SELECT DISTINCT Job
+    FROM employees
+    WHERE Deptno = 10
+    AND NOT EXISTS (
+    SELECT 1
+    FROM employees e2
+    WHERE e2.Deptno = 20
+    AND e2.Job = employees.Job
+    );
+
+Q.xviii. Find the highest sal of EMP table.
+A.SELECT MAX(Sal) AS Highest_Salary
+    FROM EMP;
+
+Q.xix. Find details of highest paid employee.
+A.SELECT *
+   FROM EMP
+   WHERE Sal = (SELECT MAX(Sal) FROM EMP);
+
+Q.xx. Find the total sal given to the MGR.
+A.SELECT Mgr, SUM(Sal) AS Total_Salary
+   FROM EMP
+   GROUP BY Mgr;
+
+Q.xxi. List the emps whose names contains ‘A’.
+A.SELECT *
+   FROM EMP
+   WHERE Ename LIKE '%A%';
+
+Q.xxii. Find all the emps who earn the minimum Salary for each job wise in ascending order.
+A.SELECT Empno, Ename, Job, Sal
+    FROM EMP e1
+    WHERE Sal = (
+    SELECT MIN(Sal)
+    FROM EMP e2
+    WHERE e1.Job = e2.Job
+    )
+   ORDER BY Sal ASC;
+
+Q.xxiii. List the emps whose sal greater than Blake’s sal.
+A.SELECT *
+    FROM EMP
+   WHERE Sal > (SELECT Sal FROM EMP WHERE Ename = 'BLAKE');
+
+Q.xxiv. Create view v1 to select ename, job, dname, loc whose deptno are same.
+A.CREATE VIEW v1 AS
+SELECT e.Ename, e.Job, d.Dname, d.Loc
+FROM EMP e
+JOIN DEPT d ON e.Deptno = d.Deptno;
+
+Q.xxv. Create a procedure with dno as input parameter to fetch ename and dname
+A.CREATE PROCEDURE FetchEmployeeDepartment(IN dno INT)
+    BEGIN
+    SELECT e.Ename, d.Dname
+    FROM EMP e
+    JOIN DEPT d ON e.Deptno = d.Deptno
+    WHERE d.Deptno = dno;
+     END ;
+
+
+Q.xxvi. Add column Pin with bigint data type in table student.
+A.ALTER TABLE student
+   ADD Pin BIGINT;
+
